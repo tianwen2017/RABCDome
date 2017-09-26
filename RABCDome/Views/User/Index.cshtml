@@ -1,0 +1,55 @@
+﻿@model IEnumerable<RABCDome.Model.User>
+@{
+    ViewBag.Title = "用户管理";
+}
+
+<a id="create" href="#">新增</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>用户名</th>
+        <th>密码</th>
+        <th>操作</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.id</td>
+            <td>@item.UserName</td>
+            <td>@item.PassWord</td>
+            <td style="width: 100px;">
+                <a class="edit" href="@Url.Action("Edit", new {id = item.id})">编辑</a>
+                @Html.ActionLink("删除", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>
+@section Script
+{
+    <script>
+        $("#create").click(function () {
+            layer.open({
+                type: 2,
+                title: '用户管理-新增',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content: '@Url.Action("Create")'
+            });
+        });
+
+        $(".edit").click(function () {
+            var $that = $(this);
+            layer.open({
+                type: 2,
+                title: '用户管理-编辑',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content:$that.attr("href")
+            });
+            event.preventDefault();
+        });
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@model RABCDome.ViewModels.RoleModuleViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/_LayoutForm.cshtml";
+}
+
+<form class="bootstrap-frm" action="@Url.Action("Update")">
+    <h1>角色模块-编辑</h1>
+    <input type="hidden" name="Roleid" value="@Model.RoleId" />
+    <input type="hidden" name="Moduleid" value="@Model.ModuleId"/>
+    <label>
+        <span>角色名称</span>
+        <input type="text" name="RoleName" value="@Model.RoleName" />
+    </label>
+    <label>
+        <span>模块名称</span>
+        <input type="text" name="ModuleName" value="@Model.ModuleName"/>
+    </label>
+    <label>
+        <span>更多模块</span>
+        @Html.DropDownList("UpdateModuleid", (IEnumerable<SelectListItem>)ViewBag.ModuleOptions)
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <input type="button" class="button" value="提交" />
+    </label>
+</form>
+
+@section Script
+{
+    <script>
+        $(".button").click(function () {
+            parent.location.reload();
+            $.ajax({
+                url: '@Url.Action("Update", "RoleModule")',
+                type: "post",
+                data: $(".bootstrap-frm").serialize(),
+                success:function(data) {
+                    if (data.code === 200) {
+                        var index = parent.layer.getFramIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        alert("提交失败");
+                    }
+                }
+            });
+        });
+    </script>
+}

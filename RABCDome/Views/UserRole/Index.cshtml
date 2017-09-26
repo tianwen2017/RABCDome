@@ -1,0 +1,78 @@
+﻿@model IEnumerable<RABCDome.Model.User>
+@{
+    ViewBag.Title = "用户角色管理";
+}
+
+<a id="create" href="#">新增</a>
+
+<table>
+    <tr>
+        <th>用户名称</th>
+        <th>用户角色</th>
+        <th>操作</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        foreach (var role in user.Roles)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@role.name</td>
+                <td style="width: 100px;">
+                    <a class="edit" href="@Url.Action("Edit", new {UserId = user.id,RoleId = role.id})">编辑</a>
+                    @Html.ActionLink("删除", "Delete", new { UserId = user.id, RoleId = role.id }, new { @class = "delete" })
+                </td>
+            </tr>
+        }
+
+    }
+
+</table>
+@section Script
+{
+    <script>
+        $("#create").click(function () {
+            layer.open({
+                type: 2,
+                title: '用户角色管理-新增',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content: '@Url.Action("Create")'
+            });
+        });
+
+        $(".edit").click(function (event) {
+            var $that = $(this);
+            layer.open({
+                type: 2,
+                title: '用户角色管理-编辑',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content:$that.attr("href")
+            });
+            event.preventDefault();
+        });
+
+        $(".delete").click(function (event) {
+            var href = $(this).attr("href");
+            $.ajax({
+                url: href,
+                type: "post",
+                success: function(res) {
+                    if (res.code === 200) {
+                        window.location.reload();
+                    } else {
+                        alert("删除失败");
+                    }
+                }
+
+            });
+
+        });
+
+    </script>
+}
+
+

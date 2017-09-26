@@ -1,0 +1,78 @@
+﻿@model IEnumerable<RABCDome.Model.Role>
+@{
+    ViewBag.Title = "角色模块管理";
+}
+
+<a id="create" href="#">新增</a>
+
+<table>
+    <tr>
+        <th>角色名称</th>
+        <th>角色模块</th>
+        <th>控制器</th>
+        <th>操作</th>
+    </tr>
+    @foreach (var role in Model)
+    {
+        foreach (var module in role.Modules)
+        {
+            <tr>
+                <td>@role.name</td>
+                <td>@module.name</td>
+                <td>@module.Controller</td>
+                <td style="width: 100px;">
+                    <a class="edit" href="@Url.Action("Edit", new {RoleId = role.id,ModuleId = module.id})">编辑</a>
+                    @Html.ActionLink("删除", "Delete", new { RoleId = role.id, ModuleId = module.id },new {@class="delete"})
+                </td>
+            </tr>
+        }
+
+    }
+
+</table>
+@section Script
+{
+    <script>
+        $("#create").click(function () {
+            layer.open({
+                type: 2,
+                title: '角色模块管理-新增',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content: '@Url.Action("Create")'
+            });
+        });
+
+        $(".edit").click(function (event) {
+            var $that = $(this);
+            layer.open({
+                type: 2,
+                title: '角色模块管理-编辑',
+                shadeClose: true,
+                shade: false,
+                area: ['500px', '400px'],
+                content:$that.attr("href")
+            });
+            event.preventDefault();
+        });
+
+        $(".delete").click(function (event) {
+            var href = $(this).attr("href");
+            $.ajax({
+                url: href,
+                type: "post",
+                success: function(res) {
+                    if (res.code === 200) {
+                        window.location.reload();
+                    } else {
+                        alert("删除失败");
+                    }
+                }
+
+            });
+
+        });
+
+    </script>
+}

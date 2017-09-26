@@ -1,0 +1,43 @@
+﻿@model RABCDome.Model.Role
+@{
+    ViewBag.title = "角色管理 - 编辑";
+    Layout = "~/Views/_LayoutForm.cshtml";
+}
+
+<form class="bootstrap-frm" action="@Url.Action("Save")">
+    <h1>角色管理 - 编辑</h1>
+    <label>
+        <span>ID：</span>
+        <input type="text" name="id" value="@Model.id" readonly="" />
+    </label>
+    <label>
+        <span>角色名称</span>
+        <input type="text" name="name" value="@Model.name" placeholder="请输入角色名称" />
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <input type="button" class="button" value="提交" />
+    </label>
+</form>
+
+@section Script
+{
+    <script>
+        $(".button").click(function () {
+            parent.location.reload();
+            $.ajax({
+                url: '@Url.Action("Save","Role")',
+                type: "post",
+                data: $("form").serialize(),
+                success:function(data) {
+                    if (data.code === 200) {
+                        var index = parent.layer.getFramIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        alert("提交失败");
+                    }
+                }
+            });
+        });
+    </script>
+}

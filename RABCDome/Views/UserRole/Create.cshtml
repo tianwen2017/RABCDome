@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/_LayoutForm.cshtml";
+}
+
+<form class="bootstrap-frm" action="@Url.Action("Insert")">
+    <h1>用户角色-新增</h1>
+    <label>
+        <span>选择用户</span>
+        @Html.DropDownList("UserId", (IEnumerable<SelectListItem>)ViewBag.UserOptions)
+    </label>
+    <label>
+        <span>选择角色</span>
+        @Html.DropDownList("RoleId", (IEnumerable<SelectListItem>)ViewBag.RoleOptions)
+    </label>
+    <label>
+        <span>&nbsp;</span>
+        <input type="button" class="button" value="提交" />
+    </label>
+</form>
+
+@section Script
+{
+    <script>
+        $(".button").click(function () {
+            parent.location.reload();
+            $.ajax({
+                url: '@Url.Action("Insert", "UserRole")',
+                type: "post",
+                data: $(".bootstrap-frm").serialize(),
+                success:function(data) {
+                    if (data.code === 200) {
+                        var index = parent.layer.getFramIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        alert("提交失败");
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+
